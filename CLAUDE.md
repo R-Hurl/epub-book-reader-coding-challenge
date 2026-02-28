@@ -1,49 +1,97 @@
-# Angular Coding Standards
+# CLAUDE.md
 
-You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## TypeScript Best Practices
+## Commands
+
+```bash
+yarn start          # Dev server at http://localhost:4200
+yarn build          # Production build → dist/
+yarn test           # Unit tests via Vitest (ng test)
+yarn watch          # Build in watch mode (development config)
+```
+
+## Architecture
+
+This is an Angular 21 EPUB reader using **epubjs** for rendering and **Angular Material** for UI.
+
+**Routing:**
+
+- `/` → `HomeComponent` (file picker, lazy-loaded)
+- `/reader` → `ReaderComponent` shell with child routes (lazy-loaded)
+- All other paths redirect to `/`
+
+**State — `EpubService` (`src/app/services/epub.service.ts`):**
+Singleton service that owns all epubjs state via signals: `book`, `rendition`, `toc`, `title`, `author`, `currentHref`, `isLoading`, `error`, `canGoNext`, `canGoPrev`. Computed: `hasBook`, `hasError`. Key methods: `openBook(file)`, `attachRendition(element)`, `goNext()`, `goPrev()`, `goToHref(href)`, `destroyBook()`.
+
+**Feature components under `src/app/features/reader/components/`:**
+
+- `reader-toolbar` — presentational; inputs: title, author, sidenavOpen; output: toggleSidenav
+- `reader-viewer` — attaches epubjs rendition via `afterNextRender()`, uses ResizeObserver
+- `toc-panel` — TOC list; inputs: tocItems, currentHref; output: navigateTo
+- `nav-controls` — prev/next buttons; inputs: canGoPrev, canGoNext; outputs: prev, next
+
+**Guard:** `ReaderComponent` uses an `effect()` to redirect to `/` if `epubService.hasBook()` is false.
+
+## epubjs Integration
+
+```typescript
+import Epub, { Book, Rendition, NavItem } from 'epubjs';
+
+// Type cast required when opening from ArrayBuffer
+book.open(arrayBuffer as unknown as string);
+
+// Promises for metadata
+await book.loaded.metadata; // → { title, creator }
+await book.loaded.navigation; // → { toc: NavItem[] }
+```
+
+- `allowedCommonJsDependencies: ["epubjs"]` is set in `angular.json`
+- `allowSyntheticDefaultImports: true` and `esModuleInterop: true` are set in `tsconfig.json`
+
+## Angular 21 Conventions
+
+- Root component: `src/app/app.ts` (not `app.component.ts`); inline template
+- `standalone: true` must NOT be set — it's the default in Angular v20+
+- Use `afterNextRender()` for DOM access (not `ngAfterViewInit`)
+- All components use `ChangeDetectionStrategy.OnPush`
+
+## Angular Coding Standards
+
+### TypeScript
+
 - Use strict type checking
 - Prefer type inference when the type is obvious
-- Avoid the `any` type; use `unknown` when type is uncertain
+- Avoid `any`; use `unknown` when type is uncertain
 
-## Angular Best Practices
+### Angular
+
 - Always use standalone components over NgModules
-- Must NOT set `standalone: true` inside Angular decorators. It's the default in Angular v20+.
-- Use signals for state management
+- Use signals for state management; use `update()` or `set()` — never `mutate()`
+- Use `computed()` for derived state
 - Implement lazy loading for feature routes
-- Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
-- Use `NgOptimizedImage` for all static images
-  - `NgOptimizedImage` does not work for inline base64 images
+- Do NOT use `@HostBinding`/`@HostListener`; put host bindings in the `host` object of `@Component`/`@Directive`
+- Use `NgOptimizedImage` for static images (does not work for inline base64)
 
-## Accessibility Requirements
-- It MUST pass all AXE checks
-- It MUST follow all WCAG AA minimums, including focus management, color contrast, and ARIA attributes
+### Accessibility
 
-## Components
-- Keep components small and focused on a single responsibility
+- Must pass all AXE checks
+- Must follow WCAG AA minimums: focus management, color contrast, ARIA attributes
+
+### Components
+
 - Use `input()` and `output()` functions instead of decorators
-- Use `computed()` for derived state
-- Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
-- Prefer inline templates for small components
-- Prefer Reactive forms instead of Template-driven ones
-- Do NOT use `ngClass`, use `class` bindings instead
-- Do NOT use `ngStyle`, use `style` bindings instead
-- When using external templates/styles, use paths relative to the component TS file
+- Prefer inline templates for small components; use external paths relative to the component TS file
+- Do NOT use `ngClass` — use `class` bindings; do NOT use `ngStyle` — use `style` bindings
+- Prefer Reactive forms over Template-driven
 
-## State Management
-- Use signals for local component state
-- Use `computed()` for derived state
-- Keep state transformations pure and predictable
-- Do NOT use `mutate` on signals, use `update` or `set` instead
+### Templates
 
-## Templates
-- Keep templates simple and avoid complex logic
-- Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
-- Use the async pipe to handle observables
-- Do not assume globals like (`new Date()`) are available
+- Use native control flow (`@if`, `@for`, `@switch`) instead of structural directives
+- Use the async pipe for observables
+- Do not assume globals like `new Date()` are available
 
-## Services
-- Design services around a single responsibility
-- Use the `providedIn: 'root'` option for singleton services
-- Use the `inject()` function instead of constructor injection
+### Services
+
+- Single responsibility; `providedIn: 'root'` for singletons
+- Use `inject()` instead of constructor injection

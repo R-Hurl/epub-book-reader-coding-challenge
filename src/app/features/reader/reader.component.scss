@@ -1,0 +1,27 @@
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.reader-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sidenav-container {
+  flex: 1;
+  min-height: 0;
+}
+
+.toc-sidenav {
+  width: 280px;
+}
+
+.reader-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}

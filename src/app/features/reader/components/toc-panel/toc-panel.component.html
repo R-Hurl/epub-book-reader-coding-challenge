@@ -1,0 +1,17 @@
+<nav aria-label="Table of contents" class="toc-nav">
+  <h2 class="toc-heading" id="toc-heading">Contents</h2>
+  <mat-nav-list aria-labelledby="toc-heading">
+    @for (item of tocItems(); track item.href) {
+      <a
+        mat-list-item
+        [attr.aria-current]="isActive(item) ? 'page' : null"
+        [class.active]="isActive(item)"
+        (click)="navigateTo.emit(item.href)"
+        (keydown.enter)="navigateTo.emit(item.href)"
+        (keydown.space)="navigateTo.emit(item.href)"
+      >
+        {{ item.label }}
+      </a>
+    }
+  </mat-nav-list>
+</nav>

@@ -1,0 +1,34 @@
+<div class="reader-layout">
+  <app-reader-toolbar
+    [title]="epubService.title()"
+    [author]="epubService.author()"
+    [sidenavOpen]="sidenavOpen()"
+    (toggleSidenav)="toggleSidenav()"
+  />
+
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav
+      [opened]="sidenavOpen()"
+      mode="side"
+      role="navigation"
+      aria-label="Table of contents"
+      class="toc-sidenav"
+    >
+      <app-toc-panel
+        [tocItems]="epubService.toc()"
+        [currentHref]="epubService.currentHref()"
+        (navigateTo)="goToHref($event)"
+      />
+    </mat-sidenav>
+
+    <mat-sidenav-content class="reader-content">
+      <app-reader-viewer />
+      <app-nav-controls
+        [canGoPrev]="epubService.canGoPrev()"
+        [canGoNext]="epubService.canGoNext()"
+        (prev)="goPrev()"
+        (next)="goNext()"
+      />
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

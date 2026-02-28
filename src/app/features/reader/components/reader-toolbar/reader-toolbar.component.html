@@ -1,0 +1,17 @@
+<mat-toolbar role="banner" color="primary" class="reader-toolbar">
+  <button
+    mat-icon-button
+    [attr.aria-label]="sidenavOpen() ? 'Close table of contents' : 'Open table of contents'"
+    [attr.aria-expanded]="sidenavOpen()"
+    (click)="toggleSidenav.emit()"
+  >
+    <mat-icon aria-hidden="true">menu</mat-icon>
+  </button>
+
+  <div class="book-info">
+    <span class="book-title">{{ title() }}</span>
+    @if (author()) {
+      <span class="book-author" aria-label="Author: {{ author() }}">{{ author() }}</span>
+    }
+  </div>
+</mat-toolbar>

@@ -1,0 +1,48 @@
+<main class="home-container" role="main" aria-label="EPUB Reader home">
+  <mat-card class="home-card">
+    <mat-card-header>
+      <mat-card-title>EPUB Reader</mat-card-title>
+      <mat-card-subtitle>Open an EPUB file to start reading</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content class="home-card-content">
+      @if (epubService.isLoading()) {
+        <div role="status" class="loading-container">
+          <mat-spinner aria-label="Loading book" diameter="48" />
+          <p>Opening book…</p>
+        </div>
+      } @else {
+        <mat-icon class="book-icon" aria-hidden="true">menu_book</mat-icon>
+        <p class="hint-text">Select an EPUB file from your device to begin reading.</p>
+      }
+    </mat-card-content>
+
+    @if (epubService.hasError()) {
+      <div role="alert" class="error-container">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+        <span>{{ epubService.error() }}</span>
+      </div>
+    }
+
+    <mat-card-actions>
+      <input
+        #fileInput
+        type="file"
+        accept=".epub"
+        aria-hidden="true"
+        class="visually-hidden"
+        (change)="onFileSelected($event)"
+      />
+      <button
+        mat-raised-button
+        color="primary"
+        aria-label="Open EPUB file"
+        [disabled]="epubService.isLoading()"
+        (click)="openFilePicker()"
+      >
+        <mat-icon aria-hidden="true">folder_open</mat-icon>
+        Open EPUB File
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</main>
