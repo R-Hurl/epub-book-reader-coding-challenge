@@ -1,37 +1,58 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, afterNextRender, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
-import { EpubService } from '../../services/epub.service';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { LibraryService, SearchResult } from '../../services/library.service';
+import { LibraryToolbarComponent } from './components/library-toolbar/library-toolbar.component';
+import { BookCardComponent } from './components/book-card/book-card.component';
+import { EmptyStateComponent } from './components/empty-state/empty-state.component';
+import { SearchPanelComponent } from './components/search-panel/search-panel.component';
 
 @Component({
   selector: 'app-home',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [
+    MatProgressBarModule,
+    MatSnackBarModule,
+    LibraryToolbarComponent,
+    BookCardComponent,
+    EmptyStateComponent,
+    SearchPanelComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
-  protected readonly epubService = inject(EpubService);
+  protected readonly libraryService = inject(LibraryService);
   private readonly router = inject(Router);
-  protected readonly fileInput = viewChild.required<ElementRef<HTMLInputElement>>('fileInput');
+  private readonly snackBar = inject(MatSnackBar);
 
-  protected openFilePicker(): void {
-    this.fileInput().nativeElement.click();
+  constructor() {
+    afterNextRender(() => {
+      void this.libraryService.loadLibrary();
+    });
   }
 
-  protected async onFileSelected(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file) return;
-
-    await this.epubService.openBook(file);
-
-    if (!this.epubService.hasError()) {
+  protected async openBook(id: string): Promise<void> {
+    try {
+      await this.libraryService.openBook(id);
       await this.router.navigate(['/reader']);
+    } catch {
+      this.snackBar.open('Failed to open book', 'Dismiss', { duration: 4000 });
+    }
+  }
+
+  protected async deleteBook(id: string): Promise<void> {
+    await this.libraryService.deleteBook(id);
+  }
+
+  protected async onSearchResultClick(result: SearchResult): Promise<void> {
+    try {
+      await this.libraryService.openBook(result.bookId);
+      this.libraryService.pendingNavHref.set(result.sectionHref);
+      await this.router.navigate(['/reader']);
+    } catch {
+      this.snackBar.open('Failed to open book', 'Dismiss', { duration: 4000 });
     }
   }
 }

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { EpubService } from '../../services/epub.service';
+import { LibraryService } from '../../services/library.service';
 import { ReaderToolbarComponent } from './components/reader-toolbar/reader-toolbar.component';
 import { TocPanelComponent } from './components/toc-panel/toc-panel.component';
 import { ReaderViewerComponent } from './components/reader-viewer/reader-viewer.component';
@@ -31,6 +32,7 @@ import { NavControlsComponent } from './components/nav-controls/nav-controls.com
 export class ReaderComponent implements OnDestroy {
   protected readonly epubService = inject(EpubService);
   private readonly router = inject(Router);
+  private readonly libraryService = inject(LibraryService);
 
   protected readonly sidenavOpen = signal(true);
 
@@ -40,6 +42,18 @@ export class ReaderComponent implements OnDestroy {
         void this.router.navigate(['/']);
       }
     });
+
+    effect(
+      () => {
+        const href = this.libraryService.pendingNavHref();
+        const rendition = this.epubService.rendition();
+        if (href && rendition) {
+          void this.epubService.goToHref(href);
+          this.libraryService.pendingNavHref.set(null);
+        }
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   protected toggleSidenav(): void {

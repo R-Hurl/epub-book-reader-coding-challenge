@@ -35,12 +35,15 @@ export class EpubService {
   readonly hasError = computed(() => this._error() !== null);
 
   async openBook(file: File): Promise<void> {
+    await this.openBookFromBuffer(await file.arrayBuffer());
+  }
+
+  async openBookFromBuffer(buffer: ArrayBuffer): Promise<void> {
     this._isLoading.set(true);
     this._error.set(null);
     try {
-      const arrayBuffer = await file.arrayBuffer();
       const book = Epub();
-      await book.open(arrayBuffer as unknown as string);
+      await book.open(buffer as unknown as string);
 
       const [metadata, navigation] = await Promise.all([
         book.loaded.metadata,

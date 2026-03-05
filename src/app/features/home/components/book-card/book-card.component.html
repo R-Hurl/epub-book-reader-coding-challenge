@@ -1,0 +1,38 @@
+<mat-card
+  class="book-card"
+  tabindex="0"
+  role="button"
+  [attr.aria-label]="'Open ' + book().title"
+  (click)="onOpen()"
+  (keydown)="onKeydown($event)"
+>
+  <div class="cover-container">
+    @if (coverUrl) {
+      <img [src]="coverUrl" [alt]="book().title + ' cover'" class="cover-image" />
+    } @else {
+      <div class="cover-placeholder" aria-hidden="true">
+        <span class="cover-placeholder-letter">{{ book().title.charAt(0) }}</span>
+      </div>
+    }
+  </div>
+
+  <mat-card-content class="card-content">
+    <div class="book-info">
+      <h3 class="book-title" [title]="book().title">{{ book().title }}</h3>
+      <p class="book-author" [title]="book().author">{{ book().author }}</p>
+      @if (book().language) {
+        <span class="book-language">{{ book().language }}</span>
+      }
+    </div>
+
+    <button
+      mat-icon-button
+      class="delete-btn"
+      [attr.aria-label]="'Delete ' + book().title"
+      matTooltip="Delete book"
+      (click)="onDelete($event)"
+    >
+      <mat-icon aria-hidden="true">delete_outline</mat-icon>
+    </button>
+  </mat-card-content>
+</mat-card>
