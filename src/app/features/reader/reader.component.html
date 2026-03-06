@@ -3,7 +3,9 @@
     [title]="epubService.title()"
     [author]="epubService.author()"
     [sidenavOpen]="sidenavOpen()"
+    [settingsOpen]="settingsOpen()"
     (toggleSidenav)="toggleSidenav()"
+    (toggleSettings)="toggleSettings()"
   />
 
   <mat-sidenav-container class="sidenav-container">
@@ -19,6 +21,16 @@
         [currentHref]="epubService.currentHref()"
         (navigateTo)="goToHref($event)"
       />
+    </mat-sidenav>
+
+    <mat-sidenav
+      position="end"
+      [opened]="settingsOpen()"
+      mode="side"
+      aria-label="Display settings"
+      class="settings-sidenav"
+    >
+      <app-theme-settings />
     </mat-sidenav>
 
     <mat-sidenav-content class="reader-content">

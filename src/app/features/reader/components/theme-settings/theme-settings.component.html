@@ -1,0 +1,95 @@
+<div class="settings-panel">
+  <h2 class="settings-heading">Display</h2>
+
+  <section class="settings-section">
+    <p class="settings-label" id="theme-label">Theme</p>
+    <mat-button-toggle-group
+      [value]="themeService.theme()"
+      (change)="themeService.setTheme($event.value)"
+      aria-labelledby="theme-label"
+      hideSingleSelectionIndicator
+    >
+      <mat-button-toggle value="light">Light</mat-button-toggle>
+      <mat-button-toggle value="dark">Dark</mat-button-toggle>
+      <mat-button-toggle value="sepia">Sepia</mat-button-toggle>
+    </mat-button-toggle-group>
+  </section>
+
+  <mat-divider />
+
+  <section class="settings-section">
+    <p class="settings-label" id="font-label">Font</p>
+    <mat-button-toggle-group
+      [value]="themeService.fontFamily()"
+      (change)="themeService.setFontFamily($event.value)"
+      aria-labelledby="font-label"
+      hideSingleSelectionIndicator
+      class="font-toggle-group"
+    >
+      <mat-button-toggle value="default">Default</mat-button-toggle>
+      <mat-button-toggle value="serif" class="font-serif">Serif</mat-button-toggle>
+      <mat-button-toggle value="sans-serif" class="font-sans">Sans</mat-button-toggle>
+      <mat-button-toggle value="dyslexic" class="font-dyslexic">Dyslexic</mat-button-toggle>
+    </mat-button-toggle-group>
+  </section>
+
+  <mat-divider />
+
+  <section class="settings-section">
+    <p class="settings-label" id="fontsize-label">Text size</p>
+    <div class="stepper-control" role="group" aria-labelledby="fontsize-label">
+      <button
+        mat-icon-button
+        aria-label="Decrease text size"
+        [disabled]="themeService.fontSize() <= 75"
+        (click)="themeService.decreaseFontSize()"
+      >
+        <mat-icon aria-hidden="true">text_decrease</mat-icon>
+      </button>
+      <span class="stepper-value" aria-live="polite" aria-atomic="true">
+        {{ themeService.fontSize() }}%
+      </span>
+      <button
+        mat-icon-button
+        aria-label="Increase text size"
+        [disabled]="themeService.fontSize() >= 200"
+        (click)="themeService.increaseFontSize()"
+      >
+        <mat-icon aria-hidden="true">text_increase</mat-icon>
+      </button>
+    </div>
+  </section>
+
+  <mat-divider />
+
+  <section class="settings-section">
+    <p class="settings-label" id="spacing-label">Line spacing</p>
+    <mat-button-toggle-group
+      [value]="themeService.lineSpacing()"
+      (change)="themeService.setLineSpacing($event.value)"
+      aria-labelledby="spacing-label"
+      hideSingleSelectionIndicator
+    >
+      <mat-button-toggle value="compact">Compact</mat-button-toggle>
+      <mat-button-toggle value="normal">Normal</mat-button-toggle>
+      <mat-button-toggle value="relaxed">Relaxed</mat-button-toggle>
+    </mat-button-toggle-group>
+  </section>
+
+  <mat-divider />
+
+  <section class="settings-section">
+    <p class="settings-label" id="margins-label">Margins</p>
+    <mat-button-toggle-group
+      [value]="themeService.margin()"
+      (change)="themeService.setMargin($event.value)"
+      aria-labelledby="margins-label"
+      hideSingleSelectionIndicator
+    >
+      <mat-button-toggle value="none">None</mat-button-toggle>
+      <mat-button-toggle value="small">Small</mat-button-toggle>
+      <mat-button-toggle value="medium">Medium</mat-button-toggle>
+      <mat-button-toggle value="large">Large</mat-button-toggle>
+    </mat-button-toggle-group>
+  </section>
+</div>

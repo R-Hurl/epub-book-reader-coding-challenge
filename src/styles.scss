@@ -1,5 +1,20 @@
 @use '@angular/material' as mat;
 
+// Reader theme CSS custom properties — applied via data-reader-theme attribute
+:root,
+[data-reader-theme='light'] {
+  --reader-bg: #ffffff;
+}
+
+[data-reader-theme='dark'] {
+  --reader-bg: #1e1e2e;
+  color-scheme: dark;
+}
+
+[data-reader-theme='sepia'] {
+  --reader-bg: #f4ecd8;
+}
+
 html {
   height: 100%;
   @include mat.theme((
