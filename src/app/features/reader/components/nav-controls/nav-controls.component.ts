@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
       <button
         mat-stroked-button
         aria-label="Previous page"
+        data-testid="prev-button"
         [disabled]="!canGoPrev()"
         (click)="prev.emit()"
       >
@@ -20,6 +21,7 @@ import { MatIconModule } from '@angular/material/icon';
       <button
         mat-stroked-button
         aria-label="Next page"
+        data-testid="next-button"
         [disabled]="!canGoNext()"
         (click)="next.emit()"
       >

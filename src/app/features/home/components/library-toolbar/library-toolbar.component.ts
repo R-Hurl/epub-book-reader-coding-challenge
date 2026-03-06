@@ -91,6 +91,7 @@ import { LibraryService, SortField, SortDirection } from '../../../../services/l
           multiple
           aria-hidden="true"
           class="visually-hidden"
+          data-testid="file-input"
           (change)="onFilesSelected($event)"
         />
 
@@ -98,6 +99,7 @@ import { LibraryService, SortField, SortDirection } from '../../../../services/l
           mat-raised-button
           color="primary"
           aria-label="Import EPUB books"
+          data-testid="import-button"
           (click)="fileInput.click()"
         >
           <mat-icon aria-hidden="true">add</mat-icon>

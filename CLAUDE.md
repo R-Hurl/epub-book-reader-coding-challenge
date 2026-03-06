@@ -9,7 +9,19 @@ yarn start          # Dev server at http://localhost:4200
 yarn build          # Production build → dist/
 yarn test           # Unit tests via Vitest (ng test)
 yarn watch          # Build in watch mode (development config)
+yarn e2e            # E2E tests via Playwright (auto-starts dev server)
 ```
+
+## Verification
+
+Before merging any change, run the full Playwright suite:
+
+```bash
+yarn e2e
+```
+
+All 3 tests must pass. The suite covers: home page empty state, EPUB import → reader,
+and prev/next chapter navigation.
 
 ## Architecture
 

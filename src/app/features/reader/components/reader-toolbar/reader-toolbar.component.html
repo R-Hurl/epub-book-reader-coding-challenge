@@ -9,7 +9,7 @@
   </button>
 
   <div class="book-info">
-    <span class="book-title">{{ title() }}</span>
+    <span class="book-title" data-testid="book-title">{{ title() }}</span>
     @if (author()) {
       <span class="book-author" aria-label="Author: {{ author() }}">{{ author() }}</span>
     }
