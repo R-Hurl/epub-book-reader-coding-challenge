@@ -3,15 +3,15 @@
     [title]="epubService.title()"
     [author]="epubService.author()"
     [sidenavOpen]="sidenavOpen()"
+    [settingsOpen]="settingsOpen()"
     (toggleSidenav)="toggleSidenav()"
+    (toggleSettings)="toggleSettings()"
   />
 
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav
       [opened]="sidenavOpen()"
       mode="side"
-      role="navigation"
-      aria-label="Table of contents"
       class="toc-sidenav"
     >
       <app-toc-panel
@@ -19,6 +19,17 @@
         [currentHref]="epubService.currentHref()"
         (navigateTo)="goToHref($event)"
       />
+    </mat-sidenav>
+
+    <mat-sidenav
+      position="end"
+      [opened]="settingsOpen()"
+      mode="side"
+      role="complementary"
+      aria-label="Display settings"
+      class="settings-sidenav"
+    >
+      <app-theme-settings />
     </mat-sidenav>
 
     <mat-sidenav-content class="reader-content">

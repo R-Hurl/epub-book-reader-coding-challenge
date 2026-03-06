@@ -14,4 +14,13 @@
       <span class="book-author" aria-label="Author: {{ author() }}">{{ author() }}</span>
     }
   </div>
+
+  <button
+    mat-icon-button
+    [attr.aria-label]="settingsOpen() ? 'Close display settings' : 'Open display settings'"
+    [attr.aria-expanded]="settingsOpen()"
+    (click)="toggleSettings.emit()"
+  >
+    <mat-icon aria-hidden="true">text_fields</mat-icon>
+  </button>
 </mat-toolbar>

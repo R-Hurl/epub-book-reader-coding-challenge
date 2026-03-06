@@ -19,9 +19,14 @@
   width: 280px;
 }
 
+.settings-sidenav {
+  width: 280px;
+}
+
 .reader-content {
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  background: var(--reader-bg);
 }
