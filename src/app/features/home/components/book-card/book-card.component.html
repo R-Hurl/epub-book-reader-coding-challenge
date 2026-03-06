@@ -2,6 +2,7 @@
   class="book-card"
   tabindex="0"
   role="button"
+  data-testid="book-card"
   [attr.aria-label]="'Open ' + book().title"
   (click)="onOpen()"
   (keydown)="onKeydown($event)"
