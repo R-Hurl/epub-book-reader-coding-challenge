@@ -12,8 +12,6 @@
     <mat-sidenav
       [opened]="sidenavOpen()"
       mode="side"
-      role="navigation"
-      aria-label="Table of contents"
       class="toc-sidenav"
     >
       <app-toc-panel
@@ -27,6 +25,7 @@
       position="end"
       [opened]="settingsOpen()"
       mode="side"
+      role="complementary"
       aria-label="Display settings"
       class="settings-sidenav"
     >
