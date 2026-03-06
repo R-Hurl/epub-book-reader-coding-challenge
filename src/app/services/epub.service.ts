@@ -1,5 +1,10 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, InjectionToken, computed, inject, signal } from '@angular/core';
 import Epub, { Book, Rendition, NavItem } from 'epubjs';
+
+export const EPUB_FACTORY = new InjectionToken<() => Book>('EpubFactory', {
+  providedIn: 'root',
+  factory: () => Epub,
+});
 
 interface EpubLocation {
   start: { cfi: string; href: string };
@@ -9,6 +14,7 @@ interface EpubLocation {
 
 @Injectable({ providedIn: 'root' })
 export class EpubService {
+  private readonly epubFactory = inject(EPUB_FACTORY);
   private readonly _book = signal<Book | null>(null);
   private readonly _rendition = signal<Rendition | null>(null);
   private readonly _toc = signal<NavItem[]>([]);
@@ -42,7 +48,7 @@ export class EpubService {
     this._isLoading.set(true);
     this._error.set(null);
     try {
-      const book = Epub();
+      const book = this.epubFactory();
       await book.open(buffer as unknown as string);
 
       const [metadata, navigation] = await Promise.all([
